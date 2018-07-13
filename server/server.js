@@ -1,4 +1,4 @@
-requuire('./config/config');
+require('./config/config');
 
 const {ObjectID} = require('mongodb');
 const express = require('express');
