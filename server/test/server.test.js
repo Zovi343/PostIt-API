@@ -47,8 +47,8 @@ describe(' /POST article', () => {
                 return done(err); 
             } 
 
-            Article.find({title}).then((article) => {
-                expect(article.length).toBe(0);
+            Article.find().then((articles) => {
+                expect(articles.length).toBe(2);
                 done()
             }).catch ((e) => done(e));
         });
