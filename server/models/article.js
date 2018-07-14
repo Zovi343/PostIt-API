@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
-var articleSchema = new mongoose.Schema({
+var ArticleSchema = new mongoose.Schema({
     // _creatorId: {
     //     type: ObjectId,
     //     required: true
@@ -53,7 +53,7 @@ var articleSchema = new mongoose.Schema({
     }]
 });
 
-const Article = mongoose.model('Articles', articleSchema);
+const Article = mongoose.model('Articles', ArticleSchema);
 
 
 module.exports = {Article}
