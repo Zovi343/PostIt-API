@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const moment = require('moment');
 const _ = require('lodash');
 
+const {authenticate} = require('./middleware/authenticate')
 const {User} = require('./models/user');
 const {Article} = require('./models/article');
 const {mongoose} = require('./db/mongoose');
@@ -15,7 +16,7 @@ const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
-app.post('/article',  async (req, res) => {
+app.post('/article', async (req, res) => {
    let currentDate = moment().format('D. M. Y')
     try {
         let newArticle = new Article({
@@ -101,6 +102,21 @@ app.patch('/article/:id', async(req, res) => {
     } catch (e) {
         res.status(400);
     }
+
+});
+
+app.post('/user', async (req, res) => {
+    try {
+        const body = _.pick(req.body, ['name', 'password']);
+        const user = new User(body);
+        await user.save();
+        const token = await user.generateAuthToken();
+        res.header('x-auth', token).send(user);
+
+    } catch (e) {
+        res.status(400).send();
+    }
+
 
 });
 
