@@ -15,7 +15,7 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 
 app.post('/article',  async (req, res) => {
-   let currentDate =parseInt(moment().format('DMY'))
+   let currentDate = moment().format('D. M. Y')
     try {
         let newArticle = new Article({
             //_creatorId: new ObjectID(),

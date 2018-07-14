@@ -23,7 +23,7 @@ var articleSchema = new mongoose.Schema({
         required: true
     },
     createdAt: {
-        type: Number,
+        type: String,
         default: null
     },
     likes: [],

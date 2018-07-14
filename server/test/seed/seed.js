@@ -9,7 +9,6 @@ const articles = [
     // creator: 'Mike',
     title: 'Graphene silicon of the future?',
     text: 'Will be graphene material of future ?',
-    createdAt: 1572018,
     likes: [],
     comments:[]
     },{
@@ -18,7 +17,6 @@ const articles = [
     // creator: 'Steve',
     title: 'Is fusion finaly here ?',
     text: 'Or is it still 20 yeras away.',
-    createdAt: 1372018,
     likes: [],
     comments:[]
     }
