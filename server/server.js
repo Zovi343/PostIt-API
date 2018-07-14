@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const moment = require('moment');
 const _ = require('lodash');
 
+const {User} = require('./models/user');
 const {Article} = require('./models/article');
 const {mongoose} = require('./db/mongoose');
 
