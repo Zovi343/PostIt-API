@@ -3,14 +3,14 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 var ArticleSchema = new mongoose.Schema({
-    // _creatorId: {
-    //     type: ObjectId,
-    //     required: true
-    // },
-    // creator: {
-    //     type: String,
-    //     required: true
-    // },
+    _creatorId: {
+        type: ObjectId,
+        required: true
+    },
+    creator: {
+        type: String,
+        required: true
+    },
     title:{
         type: String,
         trim: true,

@@ -4,19 +4,22 @@ const jwt = require('jsonwebtoken');
 const {User} = require('./../../models/user');
 const {Article} = require('./../../models/article');
 
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
+
 const articles = [
     {
      _id: new ObjectID(),
-    // _creatorId: new ObjectID(),
-    // creator: 'Mike',
+    _creatorId: userOneId,
+    creator: 'UserOne',
     title: 'Graphene silicon of the future?',
     text: 'Will be graphene material of future ?',
     likes: [],
     comments:[]
     },{
     _id: new ObjectID(),
-    // _creatorId: new ObjectID(),
-    // creator: 'Steve',
+    _creatorId: userTwoId,
+    creator: 'UserTwo',
     title: 'Is fusion finaly here ?',
     text: 'Or is it still 20 yeras away.',
     likes: [],
@@ -24,9 +27,6 @@ const articles = [
     }
 
 ];
-
-const userOneId = new ObjectID();
-const userTwoId = new ObjectID();
 
 const users = [
     {

@@ -16,17 +16,15 @@ const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
-app.post('/article', async (req, res) => {
+app.post('/article', authenticate, async (req, res) => {
    let currentDate = moment().format('D. M. Y')
     try {
         let newArticle = new Article({
-            //_creatorId: new ObjectID(),
-            // creator: 'Mike',
+            _creatorId: req.user._id,
+            creator: req.user.name,
             createdAt: currentDate,
             title: req.body.title,
-            text: req.body.text,
-            likes: [],
-            comments:[]
+            text: req.body.text
         });
 
         const article = await newArticle.save();
@@ -64,15 +62,16 @@ app.get('/article/:id', async (req, res) => {
     }
 });
 
-app.delete('/article/:id', async (req, res) => {
-    const id = req.params.id;
+app.delete('/article/:id', authenticate, async (req, res) => {
+    const _id = req.params.id;
+    const _creatorId = req.user._id;
 
-    if (!ObjectID.isValid(id)){
+    if (!ObjectID.isValid(_id)){
         return res.status(400).send();
     }
 
     try{
-        const removedArticle = await Article.findOneAndRemove({_id: id});
+        const removedArticle = await Article.findOneAndRemove({_id, _creatorId});
         
         if (!removedArticle) {
             return res.status(404).send();
@@ -85,16 +84,17 @@ app.delete('/article/:id', async (req, res) => {
 });
 
 // It suppose that you pass both the title and text if not one of them will be null or if you pass empty body both of them will be undefined 
-app.patch('/article/:id', async(req, res) => {
-    const id = req.params.id;
+app.patch('/article/:id', authenticate, async(req, res) => {
+    const _id = req.params.id;
+    const _creatorId = req.user._id;
     const {title, text} = _.pick(req.body, ['title', 'text']);
 
-    if (!ObjectID.isValid(id)){
+    if (!ObjectID.isValid(_id)){
         return res.status(400).send();
     }
 
     try {
-        const updatedArticle = await  Article.findOneAndUpdate({_id: id}, {title, text}, {new: true});
+        const updatedArticle = await  Article.findOneAndUpdate({_id, _creatorId}, {title, text}, {new: true});
         if (!updatedArticle) {
             return res.status(404).send()
         }

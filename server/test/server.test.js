@@ -17,6 +17,7 @@ describe(' /POST article', () => {
 
         request(app)
         .post('/article')
+        .set('x-auth', users[0].tokens[0].token)
         .send({title, text})
         .expect(200)
         .expect((res) => {
@@ -30,8 +31,8 @@ describe(' /POST article', () => {
 
             Article.find({title, text}).then((article) => {
                 expect(article.length).toBe(1);
-                expect(article[0].text).toBe(text);
-                expect(article[0].title).toBe(title);
+                expect(article[0].creator).toBe(users[0].name);
+                expect(article[0]._creatorId).toEqual(users[0]._id);
                 done();
             }).catch((e) => done(e));
         });
@@ -42,6 +43,7 @@ describe(' /POST article', () => {
 
         request(app)
         .post('/article')
+        .set('x-auth', users[0].tokens[0].token)
         .send({title})
         .expect(400)
         .end((err, res) =>{
@@ -54,6 +56,14 @@ describe(' /POST article', () => {
                 done()
             }).catch ((e) => done(e));
         });
+    });
+
+    it('should not create an article if user is unathorized', (done) => {
+        request(app)
+        .post('/article')
+        .set('x-auth', '123456789')
+        .expect(401)
+        .end(done);
     });
 });
 
@@ -109,6 +119,7 @@ describe('DELETE/article/:id', () => {
 
         request(app) 
         .delete(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
         .expect(200)
         .expect((res) => {
             expect(res.body.removedArticle.title).toBe(article.title);
@@ -128,11 +139,23 @@ describe('DELETE/article/:id', () => {
         });
     });
 
+    it('should not be possible to delete article of UserTwo while loged in as UserOne', (done) => {
+        let id = articles[1]._id;
+        let article = articles[0];
+
+        request(app) 
+        .delete(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(404)
+        .end(done);
+    });
+
     it('should return 404 if id is not matched', (done) => {
         let id = new ObjectID();
 
         request(app)
         .delete(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
         .expect(404)
         .end(done);
     });
@@ -142,6 +165,7 @@ describe('DELETE/article/:id', () => {
 
         request(app)
         .delete(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
         .expect(400)
         .end(done);
 
@@ -157,6 +181,7 @@ describe('PATCH/article/:id', () => {
 
         request(app)
         .patch(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
         .send({title, text})
         .expect(200)
         .expect((res) => {
@@ -166,11 +191,26 @@ describe('PATCH/article/:id', () => {
 
     });
 
+    it('should not be possible to delete article of UserTwo while loged in as UserOne' , (done) => {
+        const id = articles[1]._id;
+        const article = articles[0];
+        const title = 'New title';
+        const text = 'New text';
+
+        request(app)
+        .patch(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
+        .send({title, text})
+        .expect(404)
+        .end(done);
+    });
+
     it('should return 404 if id not found', (done) => {
         const id = new ObjectID;
 
         request(app)
         .patch(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
         .expect(404)
         .end(done);
     });
@@ -180,6 +220,7 @@ describe('PATCH/article/:id', () => {
 
         request(app)
         .patch(`/article/${id}`)
+        .set('x-auth', users[0].tokens[0].token)
         .expect(400)
         .end(done);
     });
