@@ -231,3 +231,42 @@ describe('POST/user', () => {
     });
 });
 
+describe('POST/user/login', () =>{
+    it('should login user if he passed correct data', (done) => {
+        const name = 'UserOne';
+        const password = 'UserOnePassword';
+
+        request(app)
+        .post('/user/login')
+        .send({name, password})
+        .expect(200)
+        .expect((res) => {
+            expect(res.headers['x-auth']).toBeTruthy();
+            expect(res.body.user._id).toBeTruthy();
+            expect(res.body.user.name).toBe(name);
+        })
+        .end(done); 
+    });
+
+    it('should not login user if the password was invalid', (done) => {
+        const name = 'UserOne';
+        const password = 'WorngPassword';
+
+        request(app)
+        .post('/user/login')
+        .send({name, password})
+        .expect(400)
+        .end(done);
+    }); 
+
+    it('should not login user if the name was invalid', (done) => {
+        const name = 'WorngName';
+        const password = 'UserOnePassword';
+
+        request(app)
+        .post('/user/login')
+        .send({name, password})
+        .expect(400)
+        .end(done);
+    }); 
+});
