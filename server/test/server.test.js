@@ -196,8 +196,8 @@ describe('POST/user', () => {
         .expect(200)
         .expect((res) => {
             expect(res.headers['x-auth']).toBeTruthy();
-            expect(res.body._id).toBeTruthy();
-            expect(res.body.name).toBe(name)
+            expect(res.body.user._id).toBeTruthy();
+            expect(res.body.user.name).toBe(name)
         })
         .end((err, res) => {
             User.findOne({name}).then((user) => {

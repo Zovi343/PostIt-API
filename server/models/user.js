@@ -31,16 +31,16 @@ const UserSchema = new mongoose.Schema({
 
 
 UserSchema.methods.toJSON = function () {
-    let user = this;
-    let userObject= user.toObject();
+    const user = this;
+    const userObject= user.toObject();
 
     return _.pick(user, ['_id', 'name']);
 };
 
 UserSchema.methods.generateAuthToken = function () {
-    let user = this;
-    let access = 'auth';
-    let token = jwt.sign({_id: user._id.toHexString(), access}, '123');
+    const user = this;
+    const access = 'auth';
+    const token = jwt.sign({_id: user._id.toHexString(), access}, '123');
 
     user.tokens = user.tokens.concat([{access, token}]);
 
@@ -51,7 +51,7 @@ UserSchema.methods.generateAuthToken = function () {
 
 
 UserSchema.statics.findByToken = function (token) {
-    let User = this;
+    const User = this;
     let decoded;
 
     try {
@@ -67,8 +67,26 @@ UserSchema.statics.findByToken = function (token) {
    });
 };
 
+UserSchema.statics.findByCredentials = async function (name, password) {
+    const User = this;
+    try {
+        const user = await User.findOne({name});
+        if (!user) {
+            throw new Error; 
+        }
+        const result = await bcrypt.compare(password, user.password);
+        if (!result) {
+            throw new Error;
+        }
+
+        return user;
+    } catch (e) {
+        return Promise.reject();
+    }
+};
+
 UserSchema.pre('save', function(next) {
-    let user = this;
+    const user = this;
 
     if (user.isModified('password')){
         

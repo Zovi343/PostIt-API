@@ -111,13 +111,22 @@ app.post('/user', async (req, res) => {
         const user = new User(body);
         await user.save();
         const token = await user.generateAuthToken();
-        res.header('x-auth', token).send(user);
+        res.header('x-auth', token).send({user});
 
     } catch (e) {
         res.status(400).send();
     }
+});
 
-
+app.post('/user/login', async (req, res) => {
+    const body = _.pick(req.body, ['name', 'password']);
+    try {
+        const user = await User.findByCredentials(body.name, body.password);
+        const token = await user.generateAuthToken();
+        res.header('x-auth', token).send({user});
+    } catch (e) {
+        res.status(400).send();
+    }
 });
 
 app.listen(port, () => {
