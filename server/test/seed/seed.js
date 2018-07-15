@@ -1,5 +1,7 @@
 const {ObjectID} = require('mongodb');
+const jwt = require('jsonwebtoken');
 
+const {User} = require('./../../models/user');
 const {Article} = require('./../../models/article');
 
 const articles = [
@@ -23,6 +25,29 @@ const articles = [
 
 ];
 
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
+
+const users = [
+    {
+        _id: userOneId,
+        name: 'UserOne',
+        password: 'UserOnePassword',
+        tokens: [{
+            access: 'auth',
+            token: jwt.sign({_id: userOneId, access: 'auth'}, '123')
+        }]
+    }, {
+        _id: userTwoId,
+        name: 'UserTwo',
+        password: 'UserTwoPassword',
+        tokens: [{
+            access: 'auth',
+            token: jwt.sign({_id: userTwoId, access:'auth'}, '123')
+        }]
+    }
+]
+
 const populateArticles = async () => {
     try {
         await Article.remove({});
@@ -30,4 +55,14 @@ const populateArticles = async () => {
     } catch (e) {}
 };
 
-module.exports = {articles, populateArticles}
+const populateUsers = async () => {
+    try {
+        await User.remove({});
+        await new User(users[0]).save();
+        await new User(users[1]).save();
+    } catch (e) {
+
+    }
+};
+
+module.exports = {articles, populateArticles, users, populateUsers}

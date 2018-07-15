@@ -3,10 +3,12 @@ const request = require('supertest');
 const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server'); 
+const {User} = require('./../models/user');
 const {Article} = require('./../models/article');
-const {articles, populateArticles} = require('./seed/seed');
+const {articles, populateArticles, users, populateUsers} = require('./seed/seed');
 
 beforeEach(populateArticles);
+beforeEach(populateUsers);
 
 describe(' /POST article', () => {
     it('should create arcticle and add it to the db', (done) => {
@@ -178,6 +180,52 @@ describe('PATCH/article/:id', () => {
 
         request(app)
         .patch(`/article/${id}`)
+        .expect(400)
+        .end(done);
+    });
+});
+
+describe('POST/user', () => {
+    it('should create user', (done) => {
+        const name = 'Mike';
+        const password = 'mike123';
+
+        request(app) 
+        .post('/user')
+        .send({name, password})
+        .expect(200)
+        .expect((res) => {
+            expect(res.headers['x-auth']).toBeTruthy();
+            expect(res.body._id).toBeTruthy();
+            expect(res.body.name).toBe(name)
+        })
+        .end((err, res) => {
+            User.findOne({name}).then((user) => {
+                expect(user).toBeTruthy();
+                expect(user.password).not.toBe(password);
+                done()
+            }).catch((e) => done(e));
+        });
+    });
+
+    it('should not create user if he pass invalid data', (done) => {
+        const name = 'Jakub';
+        const password = '!';
+
+        request(app) 
+        .post('/user')
+        .send({name, password})
+        .expect(400)
+        .end(done);
+    });
+
+    it('should not create user if name is alredy in use', (done) =>{
+        const name = 'UserOne';
+        const password = '123abc';
+
+        request(app)
+        .post('/user')
+        .send({name, password})
         .expect(400)
         .end(done);
     });
