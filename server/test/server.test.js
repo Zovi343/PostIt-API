@@ -270,3 +270,21 @@ describe('POST/user/login', () =>{
         .end(done);
     }); 
 });
+
+describe('DELETE/user/logout', () => {
+    it('should delete token if user is authenticated', (done) => {
+        request(app)
+        .delete('/user/logout')
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(200)
+        .end(async (err, res) => {
+            try {
+                const user = await User.findById(users[0]._id);
+                expect(user.tokens.length).toBe(0);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+});
