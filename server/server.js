@@ -17,7 +17,7 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 
 app.post('/article', authenticate, async (req, res) => {
-   let currentDate = moment().format('D. M. Y')
+   let currentDate = moment().format('D. M. Y');
     try {
         let newArticle = new Article({
             _creatorId: req.user._id,
@@ -83,7 +83,7 @@ app.delete('/article/:id', authenticate, async (req, res) => {
     }
 });
 
-// It suppose that you pass both the title and text if not one of them will be null or if you pass empty body both of them will be undefined 
+// It suppose that you pass both the title and text if not one of them will be null or if you pass empty body both of them will be null 
 app.patch('/article/:id', authenticate, async(req, res) => {
     const _id = req.params.id;
     const _creatorId = req.user._id;
@@ -103,6 +103,31 @@ app.patch('/article/:id', authenticate, async(req, res) => {
         res.status(400);
     }
 
+});
+
+app.post('/article/:id/comment', authenticate, async (req, res) => {
+    const _id = req.params.id;
+    const text = req.body.text;
+    let currentDate = moment().format('D. M. Y');
+
+    if (!ObjectID.isValid(_id)){
+        return res.status(400).send();
+    }
+
+    const comment = {
+        _id: new ObjectID(),
+        _creatorId: req.user._id,
+        creator: req.user.name,
+        text,
+        createdAt: currentDate
+    }
+    try {
+        const article = await Article.findById(_id);
+        await article.commentArticle(comment);
+        res.send({comment});
+    } catch(e) {
+        res.status(404).send();
+    }
 });
 
 app.post('/user', async (req, res) => {

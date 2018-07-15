@@ -28,10 +28,6 @@ var ArticleSchema = new mongoose.Schema({
     },
     likes: [],
     comments: [{
-        _id:{
-            type: ObjectId,
-            required: true
-        },
         _creatorId:{
             type: ObjectId,
             required: true
@@ -45,13 +41,23 @@ var ArticleSchema = new mongoose.Schema({
             required: true
         },
         createdAt: {
-            type: Number,
+            type: String,
             required: true,
             default: null
         }
 
     }]
 });
+
+ArticleSchema.methods.commentArticle = function (comment) {
+    const article = this;
+
+    return article.update({
+        $push:{
+            comments: comment
+        }
+    });
+}
 
 const Article = mongoose.model('Articles', ArticleSchema);
 

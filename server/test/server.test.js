@@ -141,7 +141,6 @@ describe('DELETE/article/:id', () => {
 
     it('should not be possible to delete article of UserTwo while loged in as UserOne', (done) => {
         let id = articles[1]._id;
-        let article = articles[0];
 
         request(app) 
         .delete(`/article/${id}`)
@@ -223,6 +222,70 @@ describe('PATCH/article/:id', () => {
         .set('x-auth', users[0].tokens[0].token)
         .expect(400)
         .end(done);
+    });
+});
+
+describe('POST/article/:id/comment', () => {
+    it('should post comment if user is authenticated and provide correct id', (done) => {
+        const text = 'Testing commenting!';
+        const id = articles[1]._id;
+
+        request(app)
+        .post(`/article/${id}/comment`)
+        .set('x-auth', users[0].tokens[0].token)
+        .send(text)
+        .expect(200)
+        .expect((res) => {
+            expect(res.text).toBe(text)
+        })
+        .end( async (err, res) => {
+            try {
+                const article = await Article.findById(id);
+                expect(article.comments.length).toBe(1);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    it('should not post comment if id is not correct', (done) => {
+        const id = new ObjectID();
+        const text = 'This should not work';
+
+        request(app)
+        .post(`/article/${id}/comment`)
+        .set('x-auth', users[0].tokens[0].token)
+        .send(text)
+        .expect(404)
+        .end(done);
+        
+    });
+
+    it('should not post comment if id is not valid', (done) => {
+        const id = 13468;
+        const text = 'This should not work';
+
+        request(app)
+        .post(`/article/${id}/comment`)
+        .set('x-auth', users[0].tokens[0].token)
+        .send(text)
+        .expect(400)
+        .end(done);
+        
+    });
+
+    it('should not post comment user is not authenticated', (done) => {
+        const id = new ObjectID();
+        const text = 'This should not work';
+
+        request(app)
+        .post(`/article/${id}/comment`)
+        .set('x-auth', '1646516464')
+        .send(text)
+        .expect(401)
+        .end(done);
+        
     });
 });
 
