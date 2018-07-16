@@ -502,3 +502,62 @@ describe('POST/article/:id/like', () => {
         .end(done);
     });
 });
+
+describe('DELETE/article/:id/like', () => {
+    it('should delete like', (done) => {
+        const id = articles[0]._id;
+
+        request(app)
+        .delete(`/article/${id}/like`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(200)
+        .end(async (err, res) => {
+            try {
+                const article = await Article.findById(id);
+                expect(article.likes.length).toBe(0);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    it('UserTwo should not be able to delete like of UserOne', (done) => {
+        const id = articles[0]._id;
+
+        request(app)
+        .delete(`/article/${id}/like`)
+        .set('x-auth', users[1].tokens[0].token)
+        .expect(404)
+        .end(async (err, res) => {
+            try {
+                const article = await Article.findById(id);
+                expect(article.likes.length).toBe(1);
+                done();
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    it('should return 404 when there is no like to be deleted', (done) => {
+        const id = articles[1]._id;
+
+        request(app)
+        .delete(`/article/${id}/like`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(404)
+        .end(done);
+    });
+
+    
+    it('should return 404 when article is not found', (done) => {
+        const id = new ObjectID;
+
+        request(app)
+        .delete(`/article/${id}/like`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(404)
+        .end(done);
+    });
+});
