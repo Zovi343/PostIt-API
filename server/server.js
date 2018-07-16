@@ -177,6 +177,25 @@ app.post('/article/:id/like', authenticate, async (req, res) => {
     }
 });
 
+app.delete('/article/:id/like', authenticate, async (req, res) => {
+    const _id = req.params.id;
+    const _creatorId = req.user._id;
+
+    if (!ObjectID.isValid(_id)){
+        return res.status(400).send();
+    }
+
+
+    try {
+        const article = await Article.findById(_id);
+        await article.deleteLike(_creatorId);
+        res.send();
+    } catch (e) {
+        res.status(404).send();
+    }
+
+});
+
 app.post('/user', async (req, res) => {
     try {
         const body = _.pick(req.body, ['name', 'password']);

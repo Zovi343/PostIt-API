@@ -86,13 +86,37 @@ ArticleSchema.methods.deleteComment = async function (_id, _creatorId) {
 
 ArticleSchema.methods.addLike = function (_creatorId) {
     const article = this;
-    
+
     return article.update({
         $push: {
             likes: _creatorId
         }
     });
 };
+
+ArticleSchema.methods.deleteLike = async function (_creatorId) {
+    let article = this;
+    
+    try {
+        const numOfLikes = article.likes.length;
+
+        await article.update({
+            $pull:{
+                likes: _creatorId
+            }
+        });
+        
+        article = await Article.findById(article._id);
+
+        if (numOfLikes === article.likes.length){
+            throw new Error;
+        }
+
+        return Promise.resolve();
+    } catch (e) {
+        return Promise.reject();
+    }
+}
 
 const Article = mongoose.model('Articles', ArticleSchema);
 
