@@ -59,41 +59,32 @@ ArticleSchema.methods.commentArticle = function (comment) {
     });
 }
 
-ArticleSchema.methods.deleteComment = function (_id, _creatorId) {
-    const article = this;
+ArticleSchema.methods.deleteComment = async function (_id, _creatorId) {
+    let article = this;
     
-    return article.update({
-        $pull:{
-            comments: {_id, _creatorId}
+    try {
+        const numOfComments = article.comments.length;
+
+        await article.update({
+            $pull:{
+                comments: {_id, _creatorId}
+            }
+        });
+        
+        article = await Article.findById(article._id);
+
+        if (numOfComments === article.comments.length){
+            throw new Error;
         }
-    });
+
+        return Promise.resolve();
+    } catch (e) {
+        return Promise.reject();
+    }
+
 };
 
 const Article = mongoose.model('Articles', ArticleSchema);
 
 
 module.exports = {Article}
-
-
-// Testing Article
-// let test = new Article({
-//     _creatorId: new ObjectID(),
-//     creator: 'Mike',
-//     title: 'Testing Article',
-//     text: 'Test',
-//     createdAt: 123,
-//     likes: [],
-//     comments:[{
-//         _id: new ObjectID(),
-//         _creatorId: new ObjectID (),
-//         creator: 'Cliff',
-//         text: 'test',
-//         createdAt: 321
-//     }]
-// })
-
-// test.save().then((doc) => {
-//     console.log('Saved article', doc);
-// }).catch ((e) => {
-//     console.log('Error:', e);
-// });

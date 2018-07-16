@@ -392,3 +392,72 @@ describe('DELETE/user/logout', () => {
         });
     });
 });
+
+describe('DELETE/article/:id/comment/:idOfComment', () => {
+    it('should delete comment if user owns that comment', (done) => {
+        const id = articles[0]._id;
+        const idOfComment = articles[0].comments[0]._id;
+        request(app)
+        .delete(`/article/${id}/comment/${idOfComment}`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(200)
+        .end( async (err, res) => {
+            try {
+                const article = await Article.findById(id);
+                expect(article.comments.length).toBe(0);
+                done();
+
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    it('should not delete comment if user does not own that comment', (done) => {
+        const id = articles[0]._id;
+        const idOfComment = articles[0].comments[0]._id;
+        request(app)
+        .delete(`/article/${id}/comment/${idOfComment}`)
+        .set('x-auth', users[1].tokens[0].token)
+        .expect(404)
+        .end( async (err, res) => {
+            try {
+                const article = await Article.findById(id);
+                expect(article.comments.length).toBe(1);
+                done();
+
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    it('should return 404 if wrong commentId is provided', (done) => {
+        const id = articles[0]._id;
+        const idOfComment = new ObjectID();
+        request(app)
+        .delete(`/article/${id}/comment/${idOfComment}`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(404)
+        .end( async (err, res) => {
+            try {
+                const article = await Article.findById(id);
+                expect(article.comments.length).toBe(1);
+                done();
+
+            } catch (e) {
+                done(e);
+            }
+        });
+    });
+
+    it('should return 404 if wrong articleId is provided', (done) => {
+        const id = new ObjectID();
+        const idOfComment = articles[0].comments[0]._id;
+        request(app)
+        .delete(`/article/${id}/comment/${idOfComment}`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(404)
+        .end(done);
+    });
+});

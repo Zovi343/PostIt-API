@@ -15,7 +15,13 @@ const articles = [
     title: 'Graphene silicon of the future?',
     text: 'Will be graphene material of future ?',
     likes: [],
-    comments:[]
+    comments:[{
+        _id: new ObjectID(),
+        _creatorId: userOneId,
+        creator: 'UserOne',
+        text: 'Comment of UserOne',
+        createdAt: '7. 7. 2018'
+    }]
     },{
     _id: new ObjectID(),
     _creatorId: userTwoId,

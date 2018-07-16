@@ -140,16 +140,8 @@ app.delete('/article/:id/comment/:idOfComment', authenticate, async(req, res) =>
         if (!article) {
             throw new Error;
         }
-        const numOfComments = article.comments.length;
-        
-        await article.deleteComment(_idOfComment, _creatorId);
     
-        article = await Article.findById(_id);
-        const newNumofComments = article.comments.length;
-
-        if (numOfComments === newNumofComments) {
-            throw new Error;
-        }
+        await article.deleteComment(_idOfComment, _creatorId);
         res.send();
     } catch (e) {
         res.status(404).send();
@@ -195,25 +187,6 @@ app.listen(port, () => {
 });
 
 module.exports = {app}
-
-// try {
-//     let article = await Article.findById(_id);
-//     if (!article) {
-//         throw new Error;
-//     }
-//     const numOfComments = article.comments.length;
-//     await article.deleteComment(_idOfComment, _creatorId);
-
-//     article = await Article.findById(_id);
-    
-//     const newNumofComments = article.comments.length;
-//     if (numOfComments === newNumofComments) {
-//         throw new Error;
-//     }
-//     res.send();
-// } catch (e) {
-//     res.status(404).send();
-// }
 
 
 
