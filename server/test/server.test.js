@@ -461,3 +461,44 @@ describe('DELETE/article/:id/comment/:idOfComment', () => {
         .end(done);
     });
 });
+
+describe('POST/article/:id/like', () => {
+    it('should add like', (done) => {
+        const id = articles[1]._id;
+
+        request(app)
+        .post(`/article/${id}/like`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(200)
+        .end(async (err, res) => {
+            try {
+                const article = await Article.findById(id);
+                expect(article.likes.length).toBe(1);
+                done();
+            } catch (e) {
+                done(e)
+            }
+        });
+
+    });
+
+    it('should not add like if user already liked article', (done) => {
+        const id = articles[0]._id;
+
+        request(app)
+        .post(`/article/${id}/like`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(400)
+        .end(done);
+    });
+
+    it('should not add like if id is not matched', (done) => {
+        const id = new ObjectID();
+
+        request(app)
+        .post(`/article/${id}/like`)
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(404)
+        .end(done);
+    });
+});

@@ -14,7 +14,7 @@ const articles = [
     creator: 'UserOne',
     title: 'Graphene silicon of the future?',
     text: 'Will be graphene material of future ?',
-    likes: [],
+    likes: [userOneId],
     comments:[{
         _id: new ObjectID(),
         _creatorId: userOneId,

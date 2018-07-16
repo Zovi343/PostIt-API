@@ -160,6 +160,10 @@ app.post('/article/:id/like', authenticate, async (req, res) => {
     const _id = req.params.id;
     const _creatorId = req.user._id;
 
+    if (!ObjectID.isValid(_id)){
+        return res.status(400).send();
+    }
+
     try {
         const likeExist = await Article.findOne({_id, likes: _creatorId})
         if (likeExist) {
@@ -167,7 +171,7 @@ app.post('/article/:id/like', authenticate, async (req, res) => {
         }
         const article = await Article.findById(_id);
         await article.addLike(_creatorId);
-        res.send()
+        res.send();
     } catch (e) {
         res.status(404).send();
     }
