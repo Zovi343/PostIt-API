@@ -59,6 +59,16 @@ ArticleSchema.methods.commentArticle = function (comment) {
     });
 }
 
+ArticleSchema.methods.deleteComment = function (_id, _creatorId) {
+    const article = this;
+    
+    return article.update({
+        $pull:{
+            comments: {_id, _creatorId}
+        }
+    });
+};
+
 const Article = mongoose.model('Articles', ArticleSchema);
 
 

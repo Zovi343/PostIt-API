@@ -130,6 +130,33 @@ app.post('/article/:id/comment', authenticate, async (req, res) => {
     }
 });
 
+app.delete('/article/:id/comment/:idOfComment', authenticate, async(req, res) =>{
+    const _id = req.params.id;
+    const _idOfComment = req.params.idOfComment;
+    const _creatorId = req.user._id;
+
+    try {
+        let article = await Article.findById(_id);
+        if (!article) {
+            throw new Error;
+        }
+        const numOfComments = article.comments.length;
+        
+        await article.deleteComment(_idOfComment, _creatorId);
+    
+        article = await Article.findById(_id);
+        const newNumofComments = article.comments.length;
+
+        if (numOfComments === newNumofComments) {
+            throw new Error;
+        }
+        res.send();
+    } catch (e) {
+        res.status(404).send();
+    }
+        
+});
+
 app.post('/user', async (req, res) => {
     try {
         const body = _.pick(req.body, ['name', 'password']);
@@ -169,6 +196,24 @@ app.listen(port, () => {
 
 module.exports = {app}
 
+// try {
+//     let article = await Article.findById(_id);
+//     if (!article) {
+//         throw new Error;
+//     }
+//     const numOfComments = article.comments.length;
+//     await article.deleteComment(_idOfComment, _creatorId);
+
+//     article = await Article.findById(_id);
+    
+//     const newNumofComments = article.comments.length;
+//     if (numOfComments === newNumofComments) {
+//         throw new Error;
+//     }
+//     res.send();
+// } catch (e) {
+//     res.status(404).send();
+// }
 
 
 
