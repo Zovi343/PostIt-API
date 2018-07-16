@@ -57,7 +57,7 @@ ArticleSchema.methods.commentArticle = function (comment) {
             comments: comment
         }
     });
-}
+};
 
 ArticleSchema.methods.deleteComment = async function (_id, _creatorId) {
     let article = this;
@@ -82,6 +82,16 @@ ArticleSchema.methods.deleteComment = async function (_id, _creatorId) {
         return Promise.reject();
     }
 
+};
+
+ArticleSchema.methods.addLike = function (_creatorId) {
+    const article = this;
+    
+    return article.update({
+        $push: {
+            likes: _creatorId
+        }
+    });
 };
 
 const Article = mongoose.model('Articles', ArticleSchema);

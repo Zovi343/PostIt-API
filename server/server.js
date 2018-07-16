@@ -135,8 +135,15 @@ app.delete('/article/:id/comment/:idOfComment', authenticate, async(req, res) =>
     const _idOfComment = req.params.idOfComment;
     const _creatorId = req.user._id;
 
+     if (!ObjectID.isValid(_id)){
+        return res.status(400).send();
+    }
+    if (!ObjectID.isValid(_idOfComment)){
+        return res.status(400).send();
+    }
+
     try {
-        let article = await Article.findById(_id);
+        const article = await Article.findById(_id);
         if (!article) {
             throw new Error;
         }
@@ -147,6 +154,23 @@ app.delete('/article/:id/comment/:idOfComment', authenticate, async(req, res) =>
         res.status(404).send();
     }
         
+});
+
+app.post('/article/:id/like', authenticate, async (req, res) => {
+    const _id = req.params.id;
+    const _creatorId = req.user._id;
+
+    try {
+        const likeExist = await Article.findOne({_id, likes: _creatorId})
+        if (likeExist) {
+            return res.status(400).send();
+        }
+        const article = await Article.findById(_id);
+        await article.addLike(_creatorId);
+        res.send()
+    } catch (e) {
+        res.status(404).send();
+    }
 });
 
 app.post('/user', async (req, res) => {

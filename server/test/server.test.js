@@ -250,6 +250,19 @@ describe('POST/article/:id/comment', () => {
     });
 
     it('should not post comment if id is not correct', (done) => {
+        const id = 13254;
+        const text = 'This should not work';
+
+        request(app)
+        .post(`/article/${id}/comment`)
+        .set('x-auth', users[0].tokens[0].token)
+        .send(text)
+        .expect(400)
+        .end(done);
+        
+    });
+
+    it('should not post comment if id is not matched', (done) => {
         const id = new ObjectID();
         const text = 'This should not work';
 
@@ -258,19 +271,6 @@ describe('POST/article/:id/comment', () => {
         .set('x-auth', users[0].tokens[0].token)
         .send(text)
         .expect(404)
-        .end(done);
-        
-    });
-
-    it('should not post comment if id is not valid', (done) => {
-        const id = 13468;
-        const text = 'This should not work';
-
-        request(app)
-        .post(`/article/${id}/comment`)
-        .set('x-auth', users[0].tokens[0].token)
-        .send(text)
-        .expect(400)
         .end(done);
         
     });
