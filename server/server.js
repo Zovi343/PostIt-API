@@ -1,5 +1,6 @@
 require('./config/config');
 
+const cors = require('cors');
 const {ObjectID} = require('mongodb');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -15,6 +16,12 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(bodyParser.json());
+
+const corsOptions = {
+  exposedHeaders: 'Authorization', //<--- this and
+};
+
+app.use(cors(corsOptions));//<--- this allow me to get acces to the headers fiels when I make request to server from app because by default headers field is not accessible
 
 app.post('/article', authenticate, async (req, res) => {
    let currentDate = moment().format('D. M. Y');
