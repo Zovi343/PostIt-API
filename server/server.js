@@ -15,13 +15,15 @@ const {mongoose} = require('./db/mongoose');
 const app = express();
 const port = process.env.PORT;
 
+const corsOptions = { // from here is solution https://github.com/axios/axios/issues/746
+    origin: 'http://localhost:8080',
+    allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type'],
+    exposedHeaders: ['x-auth'],
+  }
+  
+app.all('*', cors(corsOptions))
+
 app.use(bodyParser.json());
-
-const corsOptions = {
-  exposedHeaders: 'Authorization', //<--- this and
-};
-
-app.use(cors(corsOptions));//<--- this allow me to get acces to the headers fiels when I make request to server from app because by default headers field is not accessible
 
 app.post('/article', authenticate, async (req, res) => {
    let currentDate = moment().format('D. M. Y');
