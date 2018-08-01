@@ -17,7 +17,7 @@ const port = process.env.PORT;
 
 const corsOptions = { // from here is solution https://github.com/axios/axios/issues/746
     origin: 'http://localhost:8080',
-    allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type'],
+    allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type', 'x-auth'],
     exposedHeaders: ['x-auth'],
   }
   
