@@ -232,6 +232,11 @@ app.post('/user/login', async (req, res) => {
     }
 });
 
+//there is no test case for this route
+app.get('/user/me', authenticate, (req, res) => {
+    res.status(200).send({user: req.user})
+})
+
 app.delete('/user/logout', authenticate, async (req, res) => {
     try {  
         await req.user.removeToken(req.token);
