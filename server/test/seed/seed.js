@@ -15,6 +15,7 @@ const articles = [
     title: 'Graphene silicon of the future?',
     text: 'Will be graphene material of future ?',
     likes: [userOneId],
+    createdAt: '2.7.1970',
     comments:[{
         _id: new ObjectID(),
         _creatorId: userOneId,
@@ -29,6 +30,7 @@ const articles = [
     title: 'Is fusion finaly here ?',
     text: 'Or is it still 20 yeras away.',
     likes: [],
+    createdAt: '3.7.1970',
     comments:[]
     }
 

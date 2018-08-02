@@ -29,14 +29,13 @@ app.use(bodyParser.json());
 
 
 app.post('/article', authenticate, async (req, res) => {
-   let currentDate = moment().format('D. M. Y');
     try {
         let newArticle = new Article({
             _creatorId: req.user._id,
             creator: req.user.name,
-            createdAt: currentDate,
-            title: req.body.title,
-            text: req.body.text
+            createdAt: req.body.createdAt,
+            text: req.body.text,
+            title: req.body.title
         });
 
         const article = await newArticle.save();

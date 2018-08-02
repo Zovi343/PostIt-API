@@ -12,17 +12,19 @@ beforeEach(populateUsers);
 
 describe(' /POST article', () => {
     it('should create arcticle and add it to the db', (done) => {
-        let title = 'Klein bottle ?'
-        let text = 'Have you already bought it ?'
+        let title = 'Klein bottle ?';
+        let text = 'Have you already bought it ?';
+        const createdAt = '2.7.1970';
 
         request(app)
         .post('/article')
         .set('x-auth', users[0].tokens[0].token)
-        .send({title, text})
+        .send({title, text, createdAt})
         .expect(200)
         .expect((res) => {
             expect(res.body.article.title).toBe(title);
             expect(res.body.article.text).toBe(text);
+            expect(res.body.article.createdAt).toBe(createdAt);
         })
         .end((err, res) => {
             if (err) {
