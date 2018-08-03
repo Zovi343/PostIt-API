@@ -116,7 +116,7 @@ app.patch('/article/:id', authenticate, async(req, res) => {
 app.post('/article/:id/comment', authenticate, async (req, res) => {
     const _id = req.params.id;
     const text = req.body.text;
-    let currentDate = moment().format('D. M. Y');
+    const createdAt = req.body.createdAt;
 
     if (!ObjectID.isValid(_id)){
         return res.status(400).send();
@@ -127,7 +127,7 @@ app.post('/article/:id/comment', authenticate, async (req, res) => {
         _creatorId: req.user._id,
         creator: req.user.name,
         text,
-        createdAt: currentDate
+        createdAt
     }
     try {
         const article = await Article.findById(_id);

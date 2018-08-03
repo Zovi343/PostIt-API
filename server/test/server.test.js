@@ -232,17 +232,22 @@ describe('PATCH/article/:id', () => {
 describe('POST/article/:id/comment', () => {
     it('should post comment if user is authenticated and provide correct id', (done) => {
         const text = 'Testing commenting!';
+        const createdAt = '5.1.1970'
         const id = articles[1]._id;
 
         request(app)
         .post(`/article/${id}/comment`)
         .set('x-auth', users[0].tokens[0].token)
-        .send(text)
+        .send({text, createdAt})
         .expect(200)
         .expect((res) => {
-            expect(res.text).toBe(text)
+            expect(res.body.comment.text).toBe(text);
+            expect(res.body.comment.createdAt).toBe(createdAt);
         })
         .end( async (err, res) => {
+            if(err) {
+                return done(err);
+            }
             try {
                 const article = await Article.findById(id);
                 expect(article.comments.length).toBe(1);
