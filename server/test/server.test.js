@@ -179,14 +179,16 @@ describe('PATCH/article/:id', () => {
         const article = articles[0];
         const title = 'New title';
         const text = 'New text';
+        const editedAt = '27.2.2018'
 
         request(app)
         .patch(`/article/${id}`)
         .set('x-auth', users[0].tokens[0].token)
-        .send({title, text})
+        .send({title, text, editedAt})
         .expect(200)
         .expect((res) => {
             expect(res.body.updatedArticle.text).not.toBe(article.text);
+            expect(res.body.updatedArticle.editedAt).toBe(editedAt);
         })
         .end(done);
 

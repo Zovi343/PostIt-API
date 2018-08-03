@@ -27,6 +27,10 @@ var ArticleSchema = new mongoose.Schema({
         default: null,
         required: true
     },
+    editedAt: {
+        type: String,
+        default: null
+    },
     likes: [],
     comments: [{
         _creatorId:{

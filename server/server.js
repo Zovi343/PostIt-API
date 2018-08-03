@@ -25,9 +25,6 @@ app.all('*', cors(corsOptions))
 
 app.use(bodyParser.json());
 
-//this comment is to test username on github
-
-
 app.post('/article', authenticate, async (req, res) => {
     try {
         let newArticle = new Article({
@@ -98,14 +95,14 @@ app.delete('/article/:id', authenticate, async (req, res) => {
 app.patch('/article/:id', authenticate, async(req, res) => {
     const _id = req.params.id;
     const _creatorId = req.user._id;
-    const {title, text} = _.pick(req.body, ['title', 'text']);
+    const {title, text, editedAt} = _.pick(req.body, ['title', 'text', 'editedAt']);
 
     if (!ObjectID.isValid(_id)){
         return res.status(400).send();
     }
 
     try {
-        const updatedArticle = await  Article.findOneAndUpdate({_id, _creatorId}, {title, text}, {new: true});
+        const updatedArticle = await  Article.findOneAndUpdate({_id, _creatorId}, {title, text, editedAt}, {new: true});
         if (!updatedArticle) {
             return res.status(404).send()
         }
