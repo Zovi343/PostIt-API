@@ -25,6 +25,10 @@ app.all('*', cors(corsOptions))
 
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+    res.send('<h1> PostIt-API </h1><p>You can make varios requests to this API and that way store things into DB, but of course you need to have permission first, which you can get from Jakub Zovak ;) email: jakub.zovak343@gmail.com.</p>')
+})
+
 app.post('/article', authenticate, async (req, res) => {
     try {
         let newArticle = new Article({
