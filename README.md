@@ -3,8 +3,13 @@
 This is simple API which I built using Nodejs, Express, MongoDB, Mongose, JSON Web Token. I also wrote whole test suite for it with Mocha.
 You can make various CRUD requests on this API, I am actually using it with my another project PostIt-App which you can find also in my repository.
 
-# How to use it 
+### Installing
 
+A step by step series of examples that tell you how to get a development env running
+
+Say what the step will be
+
+```
 1. install dependencies:
     npm install
 
@@ -24,4 +29,8 @@ You can make various CRUD requests on this API, I am actually using it with my a
 
 3. run script:
     npm start
+```
 
+## Running the tests
+
+npm test or npm test-watch
