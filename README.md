@@ -12,6 +12,8 @@ Say what the step will be
 ```
 1. install dependencies:
     npm install
+    
+2. start your MongoDB
 
 2. create config.json in config folder, it should look like this: 
     {
@@ -26,6 +28,8 @@ Say what the step will be
         "JWT_SECRET": "Another Secret"
         }
     }
+
+    Note that your MongoDB can start on diffrent host than localhost:27017!
 
 3. run script:
     npm start
