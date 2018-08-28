@@ -1,6 +1,6 @@
 # PostIt-API
 
-This is an API which I built using Nodejs, Express, MongoDB, Mongose, JSON Web Token. I also wrote tests for it with Mocha.
+This is an API which I built with Nodejs, Express, MongoDB, Mongose, JSON Web Token. I also wrote tests for it with Mocha.
 You can make various requests on this API, I am actually using it with my another project PostIt-App which you can find also in my repository.
 
 ### Installing
