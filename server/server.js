@@ -19,7 +19,7 @@ const corsOptions = { // from here is solution https://github.com/axios/axios/is
     origin: ['http://localhost:8080', 'https://postit-right-now.herokuapp.com'],
     allowedHeaders: ['Accept-Version', 'Authorization', 'Credentials', 'Content-Type', 'x-auth'],
     exposedHeaders: ['x-auth'],
-  }
+}
   
 app.all('*', cors(corsOptions))
 
@@ -49,8 +49,11 @@ app.post('/article', authenticate, async (req, res) => {
 app.get('/articles', async (req, res) => {
     
     try {
-        const allArticles = await Article.find();
-        res.send({allArticles});
+        const unsortedArticles = await Article.find();
+        const sortedArticles = unsortedArticles.sort((a, b) => {
+            return moment(a.createdAt, 'D.M.Y').valueOf() < moment(b.createdAt, 'D.M.Y').valueOf() ? 1 : -1;
+        });
+        res.send({sortedArticles});
     } catch (e) {
         res.status(400);
     }
