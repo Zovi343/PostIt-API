@@ -51,7 +51,7 @@ app.get('/articles', async (req, res) => {
     try {
         const unsortedArticles = await Article.find();
         const sortedArticles = unsortedArticles.sort((a, b) => {
-            return moment(a.createdAt, 'D.M.Y').valueOf() < moment(b.createdAt, 'D.M.Y').valueOf() ? 1 : -1;
+            return moment(a.createdAt, 'D.M.Y').valueOf() > moment(b.createdAt, 'D.M.Y').valueOf() ? 1 : -1;
         });
         res.send({sortedArticles});
     } catch (e) {
