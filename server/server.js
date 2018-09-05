@@ -23,15 +23,10 @@ const corsOptions = { // from here is solution https://github.com/axios/axios/is
   
 app.all('*', cors(corsOptions));
 
-app.all('*', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8000", "https://postit-right-now.herokuapp.com");
-    res.header("Access-Control-Allow-Headers");
-});
-
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-    res.send('<h1> PostIt-API </h1><p>You can make varios requests to this API and that way store things into DB, but of course you need to have permission first, which you can get from Jakub Zovak ;) email: jakub.zovak343@gmail.com.</p>')
+    res.send('<h1> PostIt-API </h1><p>You can make varios requests to this API and that way store things into DB, it was created by Jakub Zovak ;) email: jakub.zovak343@gmail.com.</p>')
 });
 
 app.post('/article', authenticate, async (req, res) => {
