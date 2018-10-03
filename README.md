@@ -5,10 +5,6 @@ You can make various requests on this API and that way manage data in the databa
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
 ```
 1. install dependencies:
     npm install
